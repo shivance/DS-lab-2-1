@@ -127,13 +127,13 @@ int main()
     while(true)
     {
     	cin>>op;
-    	if (op=="push")
+    	if (op=="enqueue")
     	{
     		cin>>val;
     		push2queue(queue,tmpq,val);
     		
     	}
-    	else if (op=="pop")
+    	else if (op=="dequeue")
     	{
     		k = pop4queue(queue,tmpq);
     		
