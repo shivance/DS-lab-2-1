@@ -97,7 +97,6 @@ public:
 
 	void display()
 	{
-		//cout<<"front = "<<front<<" rear = "<<rear<<endl;
 		if (front==-1 && rear==-1)
 		{
 			cout<<"queue is Empty\n";
