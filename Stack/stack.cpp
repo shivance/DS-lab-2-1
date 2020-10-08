@@ -59,7 +59,7 @@ public:
 		}
 	}
 
-	int size()
+	int siz()
 	{
 		return top+1;
 	}
@@ -79,30 +79,56 @@ public:
 	}
 };
 
+
 int main()
 {
-	int n;
-	cout<<"Enter size of stack : ";
+	unsigned n;
+	cout<<"Enter max size of stack buffer : ";
 	cin>>n;
-	stack Stack(n);
-	Stack.push(1);
-	Stack.push(3);
-	Stack.display();
-	while(!Stack.isEmpty()) 
-	{
-		Stack.pop();
-	}
-	Stack.display();
-	Stack.push(1);
-	Stack.push(3);
-	Stack.push(1);
-	Stack.push(3);
-	Stack.push(1);
-	Stack.push(3);
-	Stack.display();
-	cout<<"Top value "<<Stack.peek()<<endl;
-	cout<<Stack.isFull()<<" full status\n";
-	cout<<Stack.pop()<<" was popped\n";
+	stack s(n);
+	bool flg;
+    string op;int val,k;
+    cout<<"\n\n";
+    cout<<"Follow below instructions to interact with the stack : "<<"\n";
+    cout<<"To push integer <val> into stack :\n$ push <val>\n ";
+    cout<<"To pop value from the stack\n$ pop\n";
+    cout<<"To display the content of stack \n$ view\n";
+    cout<<"To break the operation\n$ exit\n";
+    cout<<"\n\n";
+    
+    while(true)
+    {
+    	cin>>op;
+    	if (op=="push")
+    	{
+    		cin>>val;
+    		flg = s.push(val);
+    		if (flg == false)
+    		{
+    			cout<<"Overflow\n";
+    		}
+    	}
+    	else if (op=="pop")
+    	{
+    		int k = s.pop();
+    		if (k==INT_MIN)
+    		{
+    			cout<<"Stack underflow :/\n";
+    		}
+    		else
+    		{
+    			cout<<k<<" popped from stack\n";
+    		}
+    	}
+    	else if (op=="view")
+    	{
+    		s.display();
+    	}
+    	else if (op=="exit")
+    	{
+    		break;
+    	}
+    }
 
 	return 0;
 }

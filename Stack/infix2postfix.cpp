@@ -1,165 +1,126 @@
+#include <cstdio>  
+#include <cstdlib>
+#include <stack>
 #include <iostream>
 #include <climits>
-#include <string>
-using namespace std;
+using namespace std;  
+  
 
-class stack
-{
-	int top;
-	int size;
-	char * arr;
-public:
-	stack(int size)
-	{
-		top = -1;
-		this->size = size;
-		arr = new char[size];
-	}
+int isOperator(char a)  
+{  
+    switch (a) {  
+    case '+':  
+        return 1;  
+    case '-':  
+        return 1;  
+    case '*':  
+        return 1;  
+    case '%':  
+        return 1;  
+    case '/':  
+        return 1;  
+    case '(':  
+        return 1;  
+    }  
+    return 0;  
+}  
+  
+int isOperand(char a)  
+{  
+    if (a >= 65 && a <= 90  
+        || a >= 97 && a <= 122)  
+        return 1;  
+    return 0;  
+}  
+  
 
-	int isEmpty()
-	{
-		if (top==-1)
-			return 1;
-		else return 0;
-	}
+int inPrec(char a)  
+{  
+    switch (a) {  
+    case '+':  
+    case '-':  
+        return 2;  
+    case '*':  
+    case '%':  
+    case '/':  
+        return 4;  
+    case '(':  
+        return 0;  
+    }  
+}  
+  
 
-	int isFull()
-	{
-		if (top==this->size-1)
-			return 1;
-		else
-			return 0;
-	}
+int outPrec(char a)  
+{  
+    switch (a) {  
+    case '+':  
+    case '-':  
+        return 1;  
+    case '*':  
+    case '%':  
+    case '/':  
+        return 3;  
+    case '(':  
+        return 100;  
+    }  
+}  
 
-	int size()
-	{
-		return top+1;
-	}
-
-	bool push(char x)
-	{
-		if (!isFull())
-		{
-			arr[++top]=x;
-			return true;
-		}
-		else
-		{
-			cout<<"Stack overflow\n";
-			return false;
-		}
-	}
-
-	int pop()
-	{
-		if (isEmpty())
-		{
-			return INT_MIN;
-		}
-		else
-		{
-			char temp;
-			temp  = arr[top];
-			--top;
-			return temp;
-		}
-	}
-
-	void display()
-	{
-		cout<<"current stack is : \n";
-		for (int i=top;i>=0;--i)
-		{
-			cout<<arr[i]<<"\n";
-		}
-	}
-
-	int peek()
-	{
-		return arr[this->top];
-	}
-
-};
-
-int prec(char op)
-{
-	if (op == '*')
-		return 5;
-	else if (op == '/')
-		return 4;
-	else if (op=='%')
-		return 3;
-	else if (op=='+')
-		return 2;
-	else if (op=='-')
-		return 1;
-	return 0;
-}
-
-
-int main()
-{
-	string s;
-
-	cin>>s;
-	string out = "";
-	stack Stack(s.length());
-	int maxprec=0;int o=0;
-	for (int i=0;i<s.length();++i)
-	{
-		if (isdigit(s[i]))
-			out+=s[i];
-		else
-		{
-			if (s[i]=='(') Stack.push(s[i]);
-			else if (s[i]==')')
-			{
-				--o;
-				while(Stack.peek()!='(')
-				{
-					cout<<Stack.peek()<<" ";
-					Stack.pop();
-				}
-				Stack.pop();
-			}
-			else if (s[i]=='(')
-			{
-				++o;
-				Stack.push(s[i]);
-
-			}
-			else
-			{
-				if (Stack.isEmpty() || prec(s[i])>=maxprec || o>0)
-				{
-					Stack.push(s[i]);
-					maxprec = prec(s[i]);
-				}
-				else
-				{
-					while((Stack.peek()!='(' || Stack.peek()==')' || (!Stack.isEmpty())))
-					{
-						if (prec(Stack.peek())<prec(s[i]))
-						{
-							break;
-						}
-						else
-						{
-							out+=Stack.peek();
-							Stack.pop();
-						}
-					}
-				}
-			}
-			
-		}
-	}
-
-	while(Stack.isEmpty())
-	{
-		cout<<Stack.peek()<<"\n";
-		Stack.pop();
-	}
-
-	return 0;
-}
+  
+void infixToPost(char* a)  
+{  
+    stack<char> s;  
+  
+    int i = 0;  
+    while (a[i] != '\0') {  
+        if (isOperand(a[i])) {  
+            printf("%c", a[i]);  
+        }  
+        else if (isOperator(a[i])) {  
+            if (s.empty()  
+                || outPrec(a[i]) > inPrec(s.top()))  
+                s.push(a[i]);  
+            else {  
+                while (!s.empty()  
+                    && outPrec(a[i]) < inPrec(s.top())) {  
+                    printf("%c", s.top());  
+                    s.pop();  
+                }  
+                s.push(a[i]);  
+            }  
+        }  
+  
+        else if (a[i] == ')') {  
+            while (s.top() != '(') {  
+                printf("%c", s.top());  
+                s.pop();  
+  
+                // if opening bracket not present  
+                if (s.empty()) {  
+                    printf(" INCORRECT EXPRESSION\n");  
+                    exit(1);  
+                }  
+            }  
+            s.pop();  
+        }  
+        i++;  
+    }  
+  
+    
+    while (!s.empty()) {  
+        if (s.top() == '(') {  
+            printf("\n INCORRECT EXPRESSION\n");  
+            exit(1);  
+        }  
+        printf("%c", s.top());  
+        s.pop();  
+    }  
+}  
+  
+// Driver code  
+int main()  
+{  
+    char input[50];
+    cin>>input; 
+    infixToPost(input);  
+    return 0;  
+}  

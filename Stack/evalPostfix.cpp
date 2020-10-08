@@ -1,135 +1,91 @@
-#include <iostream>
-#include <climits>
-using namespace std;
+#include <iostream>  
+#include <string.h>  
+#include <cstdlib>  
 
-class stack
-{
-	int top;
-	int size;
-	char * arr;
-public:
-	stack(int size)
-	{
-		top = -1;
-		this->size = size;
-		arr = new char[size];
-	}
+using namespace std; 
+  
+struct Stack  
+{  
+    int top;  
+    unsigned capacity;  
+    int* array;  
+};  
+  
 
-	int isEmpty()
-	{
-		if (top==-1)
-			return 1;
-		else return 0;
-	}
+struct Stack* createStack( unsigned capacity )  
+{  
+    struct Stack* stack = (struct Stack*) malloc(sizeof(struct Stack));  
+  
+    if (!stack) return NULL;  
+  
+    stack->top = -1;  
+    stack->capacity = capacity;  
+    stack->array = (int*) malloc(stack->capacity * sizeof(int));  
+  
+    if (!stack->array) return NULL;  
+  
+    return stack;  
+}  
+  
+int isEmpty(struct Stack* stack)  
+{  
+    return stack->top == -1 ;  
+}  
+  
+char peek(struct Stack* stack)  
+{  
+    return stack->array[stack->top];  
+}  
+  
+char pop(struct Stack* stack)  
+{  
+    if (!isEmpty(stack))  
+        return stack->array[stack->top--] ;  
+    return 'a';  
+}  
+  
+void push(struct Stack* stack, char op)  
+{  
+    stack->array[++stack->top] = op;  
+}  
+  
 
-	int isFull()
-	{
-		if (top==this->size-1)
-			return 1;
-		else
-			return 0;
-	}
+int evaluatePostfix(char* exp)  
+{  
 
-	bool push(char x)
-	{
-		if (!isFull())
-		{
-			arr[++top]=x;
-			return true;
-		}
-		else
-		{
-			cout<<"Stack overflow\n";
-			return false;
-		}
-	}
+    struct Stack* stack = createStack(strlen(exp));  
+    int i;  
+  
 
-	int pop()
-	{
-		if (isEmpty())
-		{
-			return INT_MIN;
-		}
-		else
-		{
-			char temp;
-			temp  = arr[top];
-			--top;
-			return temp;
-		}
-	}
+    if (!stack) return -1;  
+  
 
-	int sizef()
-	{
-		return size;
-	}
+    for (i = 0; exp[i]; ++i)  
+    {  
+        if (isdigit(exp[i]))  
+            push(stack, exp[i] - '0');  
+  
+        else
+        {  
+            int val1 = pop(stack);  
+            int val2 = pop(stack);  
+            switch (exp[i])  
+            {  
+            case '+': push(stack, val2 + val1); break;  
+            case '-': push(stack, val2 - val1); break;  
+            case '*': push(stack, val2 * val1); break;  
+            case '/': push(stack, val2/val1); break;  
+            }  
+        }  
+    }  
+    return pop(stack);  
+}  
+  
 
-	void display()
-	{
-		cout<<"current stack is : \n";
-		for (int i=top;i>=0;--i)
-		{
-			cout<<arr[i]<<"\n";
-		}
-	}
-
-	int peek()
-	{
-		return arr[this->top];
-	}
-
-};
-
-int eval(int a,int b,char* op)
-{
-	if (*op=='+')
-		return a+b;
-	else if (*op=='-')
-		return a-b;
-	else if (*op=='*')
-		return a*b;
-	else if (*op=='/')
-		return a/b;
-	else if (*op=='%')
-		return a%b;
-}
-
-int post(string s)
-{
-	stack Stack(s.length());
-	int tmp,v1,v2;
-	for (int i=0;i<s.length();++i)
-	{
-		if (isdigit(s[i]))
-		{
-			Stack.push(s[i]);
-		}
-		else
-		{
-			v1 = Stack.peek() - '0';
-			Stack.pop();
-			v2 = Stack.peek() - '0';
-			Stack.pop();
-			tmp = eval(v2,v1,&s[i]) + '0';
-			Stack.push(tmp);
-			cout<<v1<<s[i]<<v2<<" = "<<(tmp-'0')<<"\n";
-		}
-	}
-
-	int ans = Stack.peek()-'0';
-	return ans;
-}
-
-int main()
-{
-	cout<<"Enter postfix string : ";
-	string s;
-
-	cin>>s;
-
-	int ans = post(s);
-
-	cout<<ans<<"\n";
-
-	return 0;
-}
+int main()  
+{  
+    char exp[50];
+    cin>>exp;
+    cout<<"postfix evaluation: "<< evaluatePostfix(exp);  
+    return 0;  
+}  
