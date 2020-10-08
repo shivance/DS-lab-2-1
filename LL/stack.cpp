@@ -1,6 +1,6 @@
 #include <iostream>
+#include <cstdlib>
 #include <climits>
-
 using namespace std;
 
 class node
@@ -20,7 +20,7 @@ node* push(node* top)
 	cin>>val;
 	node* tmp = new node();
 	tmp->data = val;
-	tmp->next = node->top;
+	tmp->next = top;
 
 	return tmp;
 }
@@ -43,11 +43,16 @@ void display(node* top)
 {
 	node* tmp = top;
 	cout<<"current stack is : \n";
-	while(tmp->data>INT_MIN)
+	if (top->data>INT_MIN)
 	{
-		cout<<tmp->data<<"\n"
-		tmp = tmp->next;
+		while(tmp->data>INT_MIN)
+		{
+			cout<<tmp->data<<"\n";
+			tmp = tmp->next;
+		}
 	}
+	else
+		cout<<"EMPTY\n";
 }
 
 
