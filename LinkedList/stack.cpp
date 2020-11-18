@@ -43,7 +43,7 @@ void display(node* top)
 {
 	node* tmp = top;
 	cout<<"current stack is : \n";
-	if (top->data>INT_MIN)
+	if (top->data>	INT_MIN)
 	{
 		while(tmp->data>INT_MIN)
 		{
@@ -99,6 +99,11 @@ int main()
     	}
     	else if (op=="exit")
     	{
+    		break;
+    	}
+    	else
+    	{
+    		cout<<"Invalid input\n";
     		break;
     	}
     }

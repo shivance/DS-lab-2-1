@@ -15,34 +15,55 @@ public:
 };
 
 
-void push_front(dllnode* front)
+dllnode* push_front(dllnode* front,dllnode* &back)
 {
 	int val;cin>>val;
 	dllnode* tmp = new dllnode();
 	tmp->data = val;
+	if (front == NULL && back==NULL)
+	{
+		back = tmp;
+		front = tmp;
+		return front;
+	}
 	tmp->next = front;
 	front->prev = tmp;
 	// tmp - front - ......... - back
-	front = tmp;
+	return tmp;
 }
 
-void push_back(dllnode* back)
+dllnode* push_back(dllnode* &front,dllnode* back)
 {
 	int val; cin>>val;
-	// front - ........... - back - tmp
 	dllnode* tmp = new dllnode();
+	tmp->data = val;
+	if (front == NULL && back==NULL)
+	{
+		front = tmp;
+		back = tmp;
+		return back;
+	}
 	tmp->prev = back;
 	back->next = tmp;
-
-	back = tmp;
+	// front - ........... - back - tmp
+	return tmp;
 }
 
-void pop_front(dllnode* &front)
+dllnode* pop_front(dllnode* front,dllnode *&back)
 {
 	if (front==NULL)
-	{
+	{  
 		cout<<"list overflow\n";
-		return;
+		return NULL;
+	}
+
+	if (front->next==NULL)
+	{
+		// last node
+		cout<<front->data<<" popped from list\n";
+		free(front);
+		back = NULL;
+		return NULL;
 	}
 	dllnode* tmp = front;
 	cout<<tmp->data<<" popped from front\n";
@@ -50,14 +71,25 @@ void pop_front(dllnode* &front)
 	front->prev = NULL;
 	tmp->next = NULL;
 	free(tmp);
+
+	return front;
 }
 
-void pop_back(dllnode* &back)
+dllnode* pop_back(dllnode*& front,dllnode* back)
 {
 	if (back==NULL)
 	{
 		cout<<"list overflow\n";
-		return;
+		return NULL;
+	}
+
+	if (back->prev == NULL)
+	{
+		// last node
+		cout<<back->data<<" popped from list\n";
+		free(back);
+		front = NULL;
+		return NULL;
 	}
 	dllnode* tmp = back;
 	cout<<tmp->data<<" popped from back\n";
@@ -69,12 +101,18 @@ void pop_back(dllnode* &back)
 
 void display(dllnode* front , dllnode* back)
 {
+	if (front == NULL && back == NULL)
+	{
+		cout<<"Empty list\n";
+		return;
+	}
 	dllnode* tmp = front;
-	while(tmp->next!=NULL)
+	while(tmp!=NULL)
 	{
 		cout<<tmp->data<<" ";
 		tmp = tmp->next;
 	}
+	cout<<endl;
 }
 
 int main()
@@ -97,19 +135,19 @@ int main()
     	cin>>op;
     	if (op=="push_front")
     	{
-    		push_front(front);
+    		front = push_front(front,back);
     	}
     	else if (op=="push_back")
     	{
-    		push_back(back);
+    		back = push_back(front,back);
     	}
     	else if (op=="pop_front")
     	{
-    		pop_front(front);
+    		front = pop_front(front,back);
     	}
     	else if (op=="pop_back")
     	{
-    		pop_front(back);
+    		back = pop_back(front,back);
     	}
     	else if (op=="view")
     	{
@@ -119,8 +157,13 @@ int main()
     	{
     		break;
     	}
+    	else
+    	{
+    		cout<<"Invalid input\n";
+    		break;
+    	}
     }
 
 	return 0;
-
+}
 
