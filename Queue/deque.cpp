@@ -161,15 +161,11 @@ public:
 		{
 			cout<<"that\n";
 			for (int i=f;i<capacity;++i)
-			{
-
 				cout<<arr[i]<<" ";
-			}
 
 			for (int i=0;i<=r;++i)
-			{
 				cout<<arr[i]<<" ";
-			}
+
 			cout<<endl;
 		}
 	}
@@ -232,7 +228,7 @@ int main()
     		}
     		else
     		{
-    			cout<<k<<" popped from back from queue\n";
+    			cout<<k<<" popped from front of queue\n";
     		}
     	}
 
@@ -251,6 +247,14 @@ int main()
     			cout<<q.rear()<<"\n";
     			
     	}
+		else if (op == "view")
+		{
+			q.display();
+		}
+		else if (op=="size")
+		{
+			cout<<q.size()<<"\n";
+		}
     	else if (op=="exit")
     	{
     		break;

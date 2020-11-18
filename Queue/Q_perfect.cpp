@@ -29,21 +29,17 @@ public:
 	bool isFull()
 	{
 		if (size == capacity)
-		{
 			return true;
-		}
+	
 		else
-		{
 			return false;
-		}
 	}
 
 	bool enq(int val)
 	{
 		if (isFull())
-		{
 			return false;
-		}
+		
 		else if (isEmpty())
 		{
 			front = 0;rear = 0;
@@ -63,9 +59,7 @@ public:
 	int deq()
 	{
 		if (isEmpty())
-		{
 			return INT_MAX;
-		}
 
 		else if (size == 1)
 		{
@@ -139,7 +133,7 @@ int main()
     cout<<"\n\n";
     cout<<"Follow below instructions to interact with the queue : "<<"\n";
     cout<<"To push integer <val> into queue :\n$ enqueue <val>\n ";
-    cout<<"To pop value from the queue\n$ dequqe\n";
+    cout<<"To pop value from the queue\n$ dequeue\n";
     cout<<"To display the content of queue \n$ view\n";
     cout<<"To break the operation\n$ exit\n";
     cout<<"\n\n";
@@ -169,13 +163,11 @@ int main()
     		}
     	}
     	else if (op=="view")
-    	{
     		q.display();
-    	}
+    	
     	else if (op=="exit")
-    	{
     		break;
-    	}
+
     }
 
 	return 0;
