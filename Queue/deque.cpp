@@ -3,13 +3,13 @@
 
 using namespace std;
 
-class deq
+class int_Deque
 {
 	int siz,f,r;
 	unsigned capacity;
 	int *arr;
 public:
-	deq(unsigned cap)
+	int_Deque(unsigned cap)
 	{
 		capacity = cap;
 		arr = new int[cap];
@@ -41,13 +41,12 @@ public:
 		return arr[r];
 	}
 
-	void push_back(int data)
+	bool push_back(int data)
 	{
 		if ((unsigned)siz==capacity)
-		{
-			cout<<"Overflow in push attempt\n";
-			return;
-		}
+			//Overflow in push attempt;
+			return false;
+
 
 		if (f==-1)
 		{
@@ -60,15 +59,13 @@ public:
 			arr[r] =data;
 		}
 		siz++;
+		return true;
 	}
 
-	void push_front(int data)
+	bool push_front(int data)
 	{
 		if (siz== capacity)
-		{
-			cout<<"Overflow in push attempt\n";
-			return ;
-		}
+			return false;
 
 		if (f==-1)
 		{
@@ -85,6 +82,7 @@ public:
 			arr[f] = data;
 		}
 		siz++;
+		return true;
 	}
 
 	int pop_back()
@@ -172,12 +170,14 @@ public:
 };
 
 
+
+
 int main()
 {
 	unsigned n;
 	cout<<"Enter max size of queue buffer : ";
 	cin>>n;
-	deq q(n);
+	int_Deque q(n);
 	
     string op;int val,k;
     cout<<"\n\n";

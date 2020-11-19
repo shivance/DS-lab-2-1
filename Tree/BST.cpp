@@ -1,6 +1,7 @@
 #include <iostream>
 #include <climits>
-
+#include <cstdlib>
+#include <queue>
 using namespace std;
 
 class BSTnode
@@ -8,9 +9,11 @@ class BSTnode
 public:
     int data;
     BSTnode* lc,*rc;
+    bool lvlend;
     BSTnode()
     {
         lc = rc = NULL;
+        lvlend = false;
         data = INT_MIN;
     }
 };
@@ -80,7 +83,7 @@ BSTnode* parent(BSTnode* BST,int key)
     else return NULL;
 }
 
-void predsucc(BSTnode* &root,BSTnode*&pre,BSTnode*&succ,int key)
+void predsucc(BSTnode* root,BSTnode*&pre,BSTnode*&succ,int key)
 {
     if (root==NULL) return ;
     if (root->data == key)
@@ -89,6 +92,7 @@ void predsucc(BSTnode* &root,BSTnode*&pre,BSTnode*&succ,int key)
             pre = max(root->lc);
         if (root->rc!=NULL)
             succ = min(root->rc);
+        
         return;
     }
 
@@ -101,6 +105,60 @@ void predsucc(BSTnode* &root,BSTnode*&pre,BSTnode*&succ,int key)
     {
         succ = root;
         predsucc(root->lc,pre,succ,key);
+    }
+}
+
+BSTnode* del(BSTnode* T,int key)
+{
+    if (T==NULL) 
+        return T; 
+
+    if (key < T->data)
+        T->lc = del(T->lc,key);
+    
+    else if (key > T->data)
+        T->rc = del(T->rc,key);
+
+    else{ //key was found
+        // returns leaf as well
+        if(T->lc==NULL){
+            BSTnode* tmp = T->rc;
+            free(T);
+            return tmp;
+        }
+        else if (T->rc==NULL){
+            BSTnode* tmp = T->lc;
+            free(T);
+            return tmp;
+        }
+
+        BSTnode* tmp = min(T->rc);
+        
+        T->data = tmp->data;
+        T->rc = del(T->rc,T->data);
+    }
+
+    return T;
+}
+
+void BFS(BSTnode*& T)
+{
+    queue<BSTnode*> q;
+    T->lvlend = true;
+    q.push(T);
+
+    BSTnode* tmp = NULL;
+    while(!q.empty())
+    {
+        tmp = q.front();
+        q.pop();
+
+        cout<<tmp->data<<" ";
+        if (tmp->lc != NULL)
+            q.push(tmp->lc);
+        
+        if (tmp->rc!=NULL)
+            q.push(tmp->rc);
     }
 }
 
@@ -119,17 +177,37 @@ int main()
     cout<<"INORDER : ";inorder(BST);cout<<"\n";
     BSTnode* prec,*succ;
     prec = succ =NULL;
+    cout<<"Pecdecessor and successor : \n";
     while(true)
     {
         cin>>k;
         if (k==-1) break;
         //cout<<parent(BST,k)->data<<"\n";
         predsucc(BST,prec,succ,k);
-        cout<<prec->data<<" "<<succ->data<<'\n';
+        if (prec!=NULL)
+        {
+            cout<<"predecessor : "<<prec->data<<" ";
+        }
+        else cout<<"No predecessor ";
+        if (succ!=NULL)
+        {
+            cout<<"successor : "<<succ->data<<'\n';
+        }
+        else cout<<" No successor\n";
         prec = succ =NULL;
+    }
+    cout<<"Delete : \n";
+    while(true)
+    {
+        cin>>k;
+        if (k==-1) break;
+        del(BST,k);
+        cout<<"current level order : ";
+        BFS(BST);
+        cout<<"\n";
     }
 
     return 0;
 }
 
-//5 7 1 9 3 2 4 8 -1
+// 7 6 4 2 5 21 9 97 25 98 
